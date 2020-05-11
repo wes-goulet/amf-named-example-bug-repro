@@ -1,6 +1,6 @@
 # amf-named-example-bug-repro
 
-This repo attempts to reproduce an issue where defining a named example in an overlay RAML fails validation when using a custom validation profile.
+This repo reproduces [an issue in AMF-client-js](https://github.com/aml-org/amf/issues/589) where defining a named example in an overlay RAML fails AMF validation when using a custom validation profile.
 
 [Docs on AMF Validation](https://github.com/mulesoft-labs/amf-validation-example/blob/master/documentation/validation.md)
 
