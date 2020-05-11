@@ -42,7 +42,7 @@ const RAML_LOADER = {
     }
 };
 
-async function parse(path) {
+async function validate(path) {
     // init
     amf.plugins.document.WebApi.register();
     amf.plugins.document.Vocabularies.register();
@@ -54,28 +54,50 @@ async function parse(path) {
         RAML_LOADER
     );
     const parser = new amf.Raml10Parser(environment);
+    const model = await parser.parseFileAsync(pathToRamlResource(path));
 
-    return parser.parseFileAsync(pathToRamlResource(path));
-}
-
-async function validate(path) {
-    const model = await parse(path);
+    // validate with custom validator
     const profileName = await amf.Core.loadValidationProfile(
         `file://${CUSTOM_VALIDATIONS_PATH}`
     );
-    const { results } = await amf.AMF.validate(
+    const { results: customValidationResults } = await amf.AMF.validate(
         model,
         profileName,
         amf.MessageStyles.RAML
     );
 
-    results
+    const customViolations = customValidationResults
         .filter((result) => result.level === 'Violation')
         .map((violation) => {
-            const { targetNode, position, message, validationId } = violation;
-
-            console.error(`validation error: ${message}`);
+            const { message, validationId } = violation;
+            return `validationId: ${validationId} ::: message: ${message}`;
         });
+
+    console.log(
+        `Found ${
+            customViolations.length
+        } violation(s) from custom validator:\n${customViolations.join('\n')}`
+    );
+
+    // validate with RAML validator
+    const { results: ramlValidationResults } = await amf.AMF.validate(
+        model,
+        'RAML',
+        amf.MessageStyles.RAML
+    );
+
+    const ramlViolations = ramlValidationResults
+        .filter((result) => result.level === 'Violation')
+        .map((violation) => {
+            const { message, validationId } = violation;
+            return `validationId: ${validationId} ::: message: ${message}`;
+        });
+
+    console.log(
+        `\n\nFound ${
+            ramlViolations.length
+        } violation(s) from raml validator:\n${ramlViolations.join('\n')}`
+    );
 }
 
 const overlayPath = path.resolve(__dirname, 'overlay.raml');
