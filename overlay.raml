@@ -1,0 +1,15 @@
+#%RAML 1.0 Overlay
+title: Overlay
+extends: ./base.raml
+
+types:
+  TestEntity:
+    examples:
+      mock1: !include ./mockData/t123.json
+
+/test-entity:
+  /{id}:
+    uriParameters:
+      id:
+        examples:
+          mock1: 't123'

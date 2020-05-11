@@ -1,0 +1,19 @@
+{
+    "name": "amf-named-example-bug-repro",
+    "version": "1.0.0",
+    "license": "MIT",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "ts-node index.ts"
+    },
+    "dependencies": {
+        "amf-client-js": "^4.1.1"
+    },
+    "devDependencies": {
+        "@types/node": "^13.13.5",
+        "ts-node": "^8.10.1",
+        "typescript": "^3.8.3"
+    }
+}

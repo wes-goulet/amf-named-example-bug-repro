@@ -1,0 +1,15 @@
+#%Validation Profile 1.0
+profile: custom-validations
+
+extends: RAML
+
+violation:
+  - no-literal-dash-in-property-names
+
+validations:
+  no-literal-dash-in-property-names:
+    message: object property names cannot have dash (-) in them
+    targetClass: sh.PropertyShape
+    propertyConstraints:
+      sh.name:
+        pattern: ^[^-]*$
